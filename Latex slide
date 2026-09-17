@@ -1,0 +1,738 @@
+\documentclass[aspectratio=169, 11pt]{beamer}
+\usetheme{Berlin}
+\usepackage{amsmath, amssymb, mathtools, graphicx}
+\usepackage{wrapfig}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{itemize items}[circle]
+
+
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{headline}{}
+
+\setbeamerfont{title}{size=\large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\small, series=\bfseries}
+
+\title{Method of Multiple Scales}
+\subtitle{Applied to the Nonlinear Pendulum Problem}
+\author{Jason Kam, Siyan Zhu, Ethan Tumbos, Wenzeng Qin}
+\date{12/06/2026}
+
+
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Perturbation Methods}
+
+Mathematical Models rarely have an explicit form.
+
+\begin{itemize}
+    \item Require approximations and numerical methods.
+    \item Approximations often use perturbation methods:
+    \begin{itemize}
+        \item Equations have a very large or very small term.
+        \item One physical process is significantly less important than another dominant process.
+    \end{itemize}
+    \item Problem is often rescaled with a small parameter, $\epsilon$.
+    \item Use $\epsilon$ to create a 'Taylor-like' series expansion.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Regular Perturbation}
+\begin{itemize}
+    \item Regular perturbation can be used for ODEs of the form:
+    \[
+F(t,y,y^\prime,y^{\prime\prime},\dots,y^{(n)},\epsilon)=0
+\]
+    \medskip
+    \item where $F$ is some functional where $\epsilon$ doesn't multiply the highest derivative of $y$.
+
+    \medskip
+    \item e.g. Model in question,
+\[
+y^{\prime\prime}+y+\epsilon y^3=0
+\]
+
+\end{itemize}
+
+
+
+
+\vspace{5mm}
+
+\end{frame}
+
+
+\begin{frame}{Regular Perturbation}
+\begin{itemize}
+    \item We assume a solution to the ODE of the form
+\[
+y(t)=y_0(t)+\epsilon y_1(t)+\epsilon^2 y_2(t)+\dots
+\]
+    \medskip
+    \item where $y_0,y_1,\dots$ are found by substituting into the ODE.
+
+    \medskip
+    \item Each new term makes a more accurate approximation to the solution, but usually only a few terms are necessary.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Leading Order Term}
+\begin{itemize}
+    \item We are trying to solve the following differential equation for $0<\epsilon \ll 1$:
+
+    \begin{equation}\label{eq:1}
+        y^{\prime\prime}+y+\epsilon y^3=0,\qquad y(0)=1, \qquad y^\prime(0)=0.
+    \end{equation}
+    
+    \medskip
+    \item Using the approximation $y\sim y_0+\epsilon y_1$ where we have ignored $\epsilon^2$ terms and higher.
+    
+    \medskip
+    \item For $y_0$ term, take $\epsilon=0$, the unperturbed problem.
+    \[
+    y_0^{\prime\prime}+y_0=0 \implies y_0=A\cos{t} +B\sin{t}
+    \]
+    \[
+    y(0)=1,\quad y^\prime(0)=0 \implies A=1,\ B=0 \implies y_0=\cos{t}
+    \]
+    \medskip
+    \item So $y \sim \cos{t}+\epsilon y_1$
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Order $\epsilon$ Term}
+\begin{itemize}
+    \item In order to satisfy the initial conditions, $y(0)=1,\ y^\prime (0)=0$, we must have $y_1(0)=0$ and $y_1^\prime (0)=0$. Substituting our approximation into (\ref{eq:1}) gives
+
+    \begin{equation*}
+    \begin{split}
+         y^{\prime\prime}+y+\epsilon y^3 & \sim -\cos{t} + \epsilon y_1^{\prime\prime} + \cos t +\epsilon y_1 + \epsilon(\cos t +\epsilon y_1)^3 \\
+        & = \epsilon(y_1^{\prime\prime}+y_1) + \epsilon(\cos^3 t + 3\epsilon y_1\cos^2{t} + 3\epsilon^2 y_1^2\cos t + \epsilon^3 y_1^3) \\
+        & = \epsilon(\cos^3 t + y_1^{\prime\prime} +y_1) + O(\epsilon^2) \\ 
+        & = 0
+    \end{split}
+    \end{equation*}
+    
+    \medskip
+    \item For the equation to be equal to 0, each power of $\epsilon$ has to be equal to 0 hence, 
+    
+    \[
+        y_1^{\prime\prime}+y_1=-\cos^3
+    t    
+    \]
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Solving for $y_1$}
+\begin{itemize}
+    \item We can rewrite $\cos^3 t$ as $\cos^3 t = \frac{1}{4}\cos{3t}+\frac{3}{4}\cos{t}$ with the exponential definition of $\cos$ to get 
+\begin{equation}\label{eq:2}
+y_1^{\prime\prime}+y_1=-\frac{1}{4}\cos{3t} -\frac{3}{4}\cos{t}
+\end{equation}
+
+\medskip
+\item (\ref{eq:2}) is an ordinary linear second order differential equation so we can solve it in the standard way. 
+
+\[
+y_h^{\prime\prime}+y_h=0 \implies y_h = A\cos{t}+ B\sin{t}
+\]
+
+\medskip
+\item Now pick
+\[
+y_p = \alpha\cos{3t} + \beta t\sin{t} + \gamma t\cos{t}
+\]
+as our ansatz for the particular solution.
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Solving for $y_1$}
+\begin{itemize}
+    \item We have, 
+\[
+y_p^\prime = -3\alpha\sin{3t} + \beta t\cos{t} + \beta\sin{t} - \gamma t\sin{t} + \gamma\cos{t}
+\]
+\[
+y_p^{\prime\prime} = -9\alpha\cos{3t} - \beta t\sin{t} + 2\beta\cos{t} - \gamma t\cos{t} -2\gamma\sin{t}
+\]
+\medskip 
+\item And so
+\begin{equation*}
+\begin{split}
+y_p^{\prime\prime}+y_p^{\prime} & = -9\alpha\cos{3t} - \beta t\sin{t}  + 2\beta\cos{t} - \gamma t\cos{t} -2\gamma\sin{t} \\
+& \quad+\alpha\cos{3t} + \beta t\sin{t} + \gamma t\cos{t} \\
+& = -8\alpha\cos{3t} +2\beta\cos{t} -2\gamma\sin{t} \\
+& = -\frac{1}{4}\cos{3t} -\frac{3}{4}\cos{t}
+\end{split}
+\end{equation*}
+\[
+\implies \alpha = \frac{1}{32},\quad \beta = -\frac{3}{8},\quad \gamma = 0 
+\]
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Solving for $y_1$}
+\begin{itemize}
+    \item \[
+    \implies y_p = \frac{1}{32}\cos{3t} -\frac{3}{8}t\sin{t}
+    \]
+    \medskip \item So $y_1$ is given by,
+    \[
+    y_1 = y_h + y_p = A\cos{t}+ B\sin{t} + \frac{1}{32}\cos{3t} -\frac{3}{8}t\sin{t}
+    \]
+    \medskip \item Applying boundary conditions:
+    \[
+    y_1(0)=0,\quad y_1^\prime(0)=0,\quad \implies \quad A=-\frac{1}{32},\quad B=0
+    \]
+    
+    \medskip \item Therefore, 
+    \[
+    y_1 = -\frac{1}{32}\cos{t} + \frac{1}{32}\cos{3t} -\frac{3}{8}t\sin{t}
+    \]
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Approximation Solution}
+\begin{itemize}
+    \item Our complete approximation for y is therefore
+\[
+y\sim \cos{t} +\epsilon(-\frac{1}{32}\cos{t} + \frac{1}{32}\cos{3t} -\frac{3}{8}t\sin{t})
+\]
+
+\medskip \item Note the final term has a factor of t and is not just oscillatory. \break 
+\medskip \item The term is called $secular$ as it blows up as $t\rightarrow \infty$.
+
+\medskip \item In particular, when $t=O(\epsilon^{-1})$, the secular term $-\frac{3}{8}\epsilon t\sin{t}=O(1)$,\break 
+and has the same order as the leading term and terms in the perturbation\break series have become disordered. This means that there is no longer an asymptotic expansion of the solution and the approximation breaks down.
+\end{itemize}
+\end{frame}
+
+
+%part 1ii
+
+\begin{frame}{Method of Multiple Scales}
+\begin{itemize}
+    \item The method of multiple scales (MMS) assumes that the solution $y(t)$ can be written as
+
+\[
+y(t) = y(t, \epsilon t, \epsilon^2 t, \cdots)
+\]
+
+    \item Using chain rule to differentiate the perturbation approximation and we can group the terms in the resulting equation by order of $\epsilon$.
+
+    \item By eliminating secular terms in the resulting equation by enforcing appropriate solvability conditions, we can improve our approximation.
+    
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Setup}
+\begin{itemize}
+    \item Let $t_0 = t$, $t_1 = \epsilon t$ and $y(t) \approx y_0(t_0,t_1)+\epsilon y_1(t_0,t_1) + O(\epsilon^2)$
+
+\[
+\frac{dy}{dt} = \frac{\partial y_0}{\partial t_0}+ \epsilon\frac{\partial y_0}{\partial t_1}+ \epsilon\frac{\partial y_1}{\partial t_0}+ O(\epsilon^2)
+\]
+
+\[
+\frac{d^2y}{dt^2} = \frac{\partial^2 y_0}{\partial t_0 ^2} + \epsilon\frac{\partial^2 y_0}{\partial t_1 \partial t_0}+ \epsilon\frac{\partial^2 y_0}{\partial t_1 \partial t_0} + \epsilon\frac{\partial^2 y_1}{\partial t_0^2} + O(\epsilon^2)
+\]
+
+    \item Hence our equation $y'' + y + \epsilon y^3 = 0$ becomes
+\end{itemize}
+\begin{block}
+
+\[
+\underbrace{\frac{\partial^2 y_0}{\partial t_0 ^2}+y_0(t_0,t_1)}_{order 1} + \underbrace{\epsilon \left(2\frac{\partial^2 y_0}{\partial t_1 \partial t_0} + \frac{\partial^2 y_1}{\partial t^2} + y_1(t_0,t_1) + y_0^3(t_0,t_1)\right) }_{order \epsilon}+ O(\epsilon^2) = 0
+\]
+
+\end{block}
+\end{frame}
+
+\begin{frame}{Order 1: Leading Order Equation}
+\begin{itemize}
+    \item We solve the equation of zero order of $\epsilon$:
+
+\[
+O(1):\quad \frac{\partial^2 y_0}{\partial t_0 ^2}+y_0(t_0,t_1) = 0
+\]
+
+    \item Therefore $y_0(t_0,t_1) = A(t_1)e^{it_0}+B(t_1)e^{-it_0}$
+
+    \item To determine $A(t_1)$ and $B(t_1)$, we use the equation of first order of $\epsilon$:
+
+\[
+O(\epsilon):\quad \frac{\partial^2 y_1}{\partial t_0^2} + y_1(t_0,t_1) = -2\frac{\partial^2 y_0}{\partial t_1 \partial t_0} - y_0^3(t_0,t_1) \qquad (*)
+\]
+
+where the homogeneous solution to $y_1(t_0,t_1)$ is the same as that of $y_0(t,t_1)$.
+
+\item $-\text{RHS}(*) = A^3 e^{i3t_0} + B^3 e^{-i3t_0} + \left(2iA'(t_1) + 3A^2 B\right)e^{it_0} + \left(-2iB'(t_1) + 3A B^2\right)e^{-it_0}$
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Order $\epsilon$: Removing Secular Terms  and Solvability Condition}
+\begin{itemize}
+    \item $-\text{RHS}(*) = A^3 e^{i3t_0} + B^3 e^{-i3t_0} + \left(2iA'(t_1) + 3A^2 B\right)e^{it_0} + \left(-2iB'(t_1) + 3A B^2\right)e^{-it_0}$
+
+    \item The $e^{it_0}$ and $e^{-it_0}$ term forces the particular solution to become secular.
+
+    Therefore we enforce that these two terms are zero:
+
+\[
+2iA'(t_1) + 3A^2 B = 0 \quad (a)
+\]
+\[
+-2iB'(t_1) + 3A B^2 = 0 \quad (b)
+\]
+
+    (a) and (b) are called the solvability condition.
+
+\[
+B \cdot (a) - A \cdot (b) = 0 \quad \Longrightarrow \quad \frac{d}{dt_1}(AB) = 0
+\]
+
+    \item Thus $AB = c$ for some constant $c$
+
+\[
+aiA' + 3cA = 0 \quad \Longrightarrow \quad A(t_1) = k \cdot \exp\!\left(i \frac{3c}{2}t_1\right),\quad B(t_1) = \frac{c}{k} \cdot \exp\!\left(-i\frac{3c}{2}t_1\right)
+\]
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Solution for A and B}
+\begin{itemize}
+    \item[] \begin{equation*}
+            y_0(t_0,t_1) = k \cdot \exp\!\left(i \frac{3c}{2}t_1 + it_0\right) + \frac{c}{k} \cdot \exp\!\left(-i\frac{3c}{2}t_1 - it_0\right)
+            \end{equation*}
+    \item Using boundary condition:
+    \item[] \begin{equation*}
+            y(0) = 1 \quad \Longrightarrow \quad k + \frac{c}{k} = 1
+            \end{equation*}
+    \item[] \begin{equation*}
+            y'(0) = 0 \quad \Longrightarrow \quad \left(i \frac{3c}{2} \epsilon + i\right)k + \frac{c}{k}\left(-i\frac{3c}{2} \epsilon - i\right) = 0
+            \end{equation*}
+    \item Hence $k = \frac{1}{2}$, $c = \frac{1}{4}$ and
+    \item[]\begin{equation*}
+            y_0(t_0,t_1) = \frac{1}{2}\exp\!\left(i\left(1+\frac{3}{8}\epsilon\right)t_0\right) + \frac{1}{2}\exp\!\left(-i\left(1+\frac{3}{8}\epsilon\right)t_0\right) = \cos\!\left(\left(1+\frac{3}{8}\epsilon\right)t\right)
+            \end{equation*}
+    \item Therefore $y(t) = \cos\!\left(\left(1+\frac{3}{8}\epsilon\right)t\right) + O(\epsilon)$ as required.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Approximate Period and Temporal Interval of Validity}\
+\begin{itemize}
+    \item The approximate period of $y$ is thus $T = 2\pi(1+\frac{3}{8}\epsilon)^{-1}$
+
+    \item Since we removed the secular term in $y_1(t_0,t_1)$, this solution is valid for time up to $t = O(\epsilon^{-2})$, where the secular term of order $O(\epsilon^2)$ becomes $O(1)$ and our approximation breaks.
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{part_i)_eps_0.5_T_20.jpeg}
+    \caption{$\epsilon$ = 0.5; Green: i solution; Orange: ii solution; Blue: numerical solution}
+\end{figure}
+\end{frame}
+
+% ──────────────────────────────────────────────────────────────
+
+\begin{frame}{Background}
+\begin{block}{Equation}
+    Consider the nonlinear pendulum:
+  \begin{equation}\label{eq:pendulumODE}\tag{P}
+      \frac{d^2\theta}{dt^2} + \sin\theta = 0, \qquad
+    \theta(0) = \varepsilon,\quad \theta'(0) = 0, \qquad \varepsilon \ll 1. 
+  \end{equation}
+\end{block}
+ 
+  
+  \medskip
+  \begin{itemize}
+      \item By conservation of energy, the oscillation is small. i.e.
+        \[\theta(t)=O(\epsilon)\]
+        
+      \item Construct a perturbation series that is uniformly
+        valid for all $t$ and small $\varepsilon$, by accounting for
+        the slow phase drift caused by nonlinearity.
+       
+      \medskip
+      \item Try pertubation series
+        \begin{equation}
+            \theta(t)\sim\epsilon\theta_0(t) 
+            \tag{1}
+        \end{equation}
+        subject to $\theta_0(0)=1, \theta_0'(0)=0$.
+    \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Background (continued)}
+    \begin{itemize}
+        \item Plugging into (\ref{eq:pendulumODE}) gives
+        \newline
+        \begin{align}
+            \epsilon\theta_0''+\sin(\epsilon\theta_0) = 0 \tag{2}\\
+            \theta_0''+\frac{\sin(\epsilon\theta_0)}{\epsilon} = 0
+            \tag{3}
+        \end{align}
+        
+        \medskip
+        \item Expanding $\sin(\epsilon\theta_0)$ in Taylor series gives 
+        \begin{equation}
+            \theta_0''+\theta_0-\frac{\epsilon^2}{6}\theta_0^3 + ... = 0
+        \tag{4}
+        \end{equation}
+        which is the same as the weakly non-linear Duffing equation.
+        
+        \medskip
+        \item We know from part 1 that (4) results in a secular term that is not valid for $t=O(\epsilon^{-2})$, hence we need to introduce new timescales 
+        
+    \end{itemize}
+\end{frame}
+
+
+% ──────────────────────────────────────────────────────────────
+\section{The Method of Multiple Scales}
+% ──────────────────────────────────────────────────────────────
+
+
+\begin{frame}{Setup}
+    \begin{itemize}
+        \item Introduce two independent time variables capturing fast and slow dynamics:
+            \[
+              t_0 = t \qquad \text{(fast)}, \qquad t_1 = \varepsilon^2 t \qquad \text{(slow)}.
+            \]
+        \medskip
+        \item Treat $\theta$ as a function of both, and expand:
+            \[
+              \theta(t) = \varepsilon\,\theta_0(t_0, t_1)
+                      + \varepsilon^3\theta_1(t_0, t_1) + \cdots
+            \]
+
+      \medskip
+      \item chain rule applies for partial derivative on(P):
+      \begin{align}
+        \frac{d}{dt}   &= \frac{\partial}{\partial t_0} + \varepsilon^2\,\frac{\partial}{\partial t_1},
+        \tag{5} \\[4pt]
+        \frac{d^2}{dt^2} &= \frac{\partial^2}{\partial t_0^2}
+                         + 2\varepsilon^2\,\frac{\partial^2}{\partial {t_0 t_1}} + O(\epsilon^4)
+        \tag{6}
+      \end{align}
+
+      \medskip
+      \item The apparent redundancy of two time variables is exploited to
+      remove secular terms at each order.
+    \end{itemize}
+      
+\end{frame}
+
+
+\begin{frame}{Setup (continued)}
+    \begin{itemize}
+        \item Plugging into (P)
+
+        \begin{align*}
+        &\epsilon\left[\frac{\partial^2 \theta_0}{\partial t_0^2}
+        + \epsilon^2\left(2\frac{\partial^2\theta_0}
+        {\partial t_0 \partial t_1}\right)\right]
+        +
+        \epsilon^3\left[\frac{\partial^2 \theta_1}{\partial t_0^2}
+        + \epsilon^2\left(2\frac{\partial^2\theta_1}
+        {\partial t_0 \partial t_1}\right)\right] \\
+        &\qquad
+        +\epsilon\theta_0+\epsilon^3\theta_1
+        -\frac16\left(\epsilon\theta_0+\epsilon^2\theta_1\right)^3
+        =0,
+        \\[1ex]
+        &\epsilon\left(
+        \theta_0+\frac{\partial^2\theta_0}{\partial t_0^2}
+        \right)
+        +\epsilon^3\left(
+        \theta_1+\frac{\partial^2\theta_1}{\partial t_0^2}
+        \right)
+        +\epsilon^3\left(
+        2\frac{\partial^2\theta_0}{\partial t_0\partial t_1}
+        \right)
+        \\
+        &\qquad
+        +\epsilon^4\left(
+        2\frac{\partial^2\theta_1}{\partial t_0\partial t_1}
+        \right)
+        -\frac16\Bigl(
+        \epsilon^3\theta_0^3
+        +3\epsilon^4\theta_0^2\theta_1
+        +2\epsilon^5\theta_0\theta_1^2
+        +\epsilon^6\theta_1^3
+        \Bigr)
+        =0.
+        \end{align*}
+    \end{itemize}
+    
+\end{frame}
+
+
+% ──────────────────────────────────────────────────────────────
+\section{Leading-Order Solution}
+% ──────────────────────────────────────────────────────────────
+\begin{frame}{Order $\varepsilon$: Leading-Order Equation}\
+    \begin{itemize}
+        \item Collecting $O(\varepsilon)$ terms after substitution:
+        \begin{equation}
+            \frac{\partial^2 \theta_0}{\partial t_0^2} + \theta_0 = 0, \qquad
+            \theta_0\big|_{t_0=t_1=0} = 1, \quad
+            \frac{\partial \theta_0}{\partial t_0} \big|_{t_0=t_1=0} = 0. \tag{7}
+        \end{equation}
+
+        \medskip
+        \item The general solution is:
+        \begin{equation}
+            \theta_0 = A(t_1)\cos t_0 + B(t_1)\sin t_0, \qquad
+            A(0) = 1,\quad B(0) = 0, \tag{8}
+        \end{equation}
+        
+        \medskip
+        \item where $A$ and $B$ are \textit{functions of integration} to be
+        determined at the next order.
+
+        \medskip
+        \item The slow-time dependence of $A$ and $B$ provides the extra freedom
+        needed to absorb secular terms — this is the key mechanism of the method.        
+    \end{itemize}
+  
+\end{frame}
+% part iii
+
+
+% ──────────────────────────────────────────────────────────────
+\section{Solvability Condition}
+% ──────────────────────────────────────────────────────────────
+
+
+\begin{frame}{Order $\varepsilon^3$: Removing Secular Terms}
+\begin{itemize}
+    \item Collecting $O(\varepsilon^3)$ terms from the expanded substitution gives:
+    \begin{equation}
+    \frac{\partial^2 \theta_1}{\partial t_0^2}\, + \theta_1
+    = 2\frac{dA}{dt_1}\sin t_0 - 2\frac{dB}{dt_1}\cos t_0
+    + \frac{\theta_0^3}{6}=0 \tag{9}
+    \end{equation}
+
+    \medskip
+    \item Expanding the right-hand side in $e^{\pm it_0}$ and $e^{\pm 3it_0}$,
+    the coefficients of $e^{\pm it_0}$ are resonant with the
+    left-hand side. These must vanish
+    to prevent secular growth in $\theta_1$:
+    \begin{block}{\textbf{Solvability Condition}}
+        
+    
+    \begin{equation}
+    0 = -\frac{dB}{dt_2} + i\frac{dA}{dt_2}
+      + \frac{3}{48}[A - iB]^2[A + iB]. \tag{10}
+    \end{equation}
+    \end{block}
+
+    \medskip
+    i.e. the $e^{\pm it_0}$ term from the expanded right hand side on (5) must be zero.
+  
+    \smallskip
+  
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Evolution Equations for $A$ and $B$}
+\begin{itemize}
+  \item Separating real and imaginary parts of (10) and using
+  $[A-iB][A+iB] = A^2 + B^2$:
+  \begin{equation}
+    \frac{dB}{dt_1} = \frac{A(A^2 + B^2)}{16}, \qquad
+    \frac{dA}{dt_1} = -\frac{B(A^2 + B^2)}{16}. \tag{11}
+  \end{equation}
+
+  \medskip
+  \item Multiplying the first equation by $B$ and the second by $A$, then
+  adding both together:
+  \[
+    \frac{1}{2}\frac{d}{dt_1}(A^2 + B^2) = 0 \qquad \Longrightarrow \qquad
+    A^2 + B^2 = A^2(0) + B^2(0) = 1.  \tag{12} 
+  \]
+  
+  \medskip
+  \item Substituting $A^2 + B^2 = 1$ into (11) gives the simplified system:
+  \begin{equation}
+    \frac{dB}{dt_2} = \frac{A}{16}, \qquad
+    \frac{dA}{dt_2} = -\frac{B}{16}, \qquad
+    A(0) = 1,\; B(0) = 0. \tag{13}
+  \end{equation}
+  \item This is \textit{circular motion} in the $(A, B)$ plane.
+\end{itemize}
+\end{frame}
+
+% ──────────────────────────────────────────────────────────────
+\section{Solution}
+% ──────────────────────────────────────────────────────────────
+
+\begin{frame}{Solution for $A$, $B$ and $\theta_0$}
+\begin{itemize}
+  \item Solving (13) directly under the boundary conditions given:
+      
+  
+  \begin{equation}
+    A(t_1) = \cos\!\left(\frac{t_1}{16}\right), \qquad
+    B(t_1) = \sin\!\left(\frac{t_1}{16}\right). \tag{14}
+  \end{equation}
+
+  \medskip
+  \item Substituting back into (8) and using the cosine addition formula:
+  \begin{equation}
+  \theta_0(t) = \cos\!\left(t_0 - \frac{t_1}{16}\right)
+               = \cos\!\left(t\Bigl(1 - \frac{\varepsilon^2}{16}\Bigr)\right)
+  \tag{15}
+  \end{equation}
+
+  \medskip
+  \begin{block}{Approximate period}
+  \begin{equation}
+    T = \frac{2\pi}{1 - \varepsilon^2/16}
+      \approx 2\pi\!\left(1 + \frac{\varepsilon^2}{16}\right),
+    \tag{16}
+  \end{equation}
+  \end{block}
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Temporal Interval of Validity}
+\begin{itemize}
+\begin{block}{Approximate solution }
+  
+  \[
+    \theta \approx \varepsilon\,\theta_0 + \varepsilon^3\theta_1 + \cdots
+  \]  
+  
+\end{block}
+  
+
+  \medskip
+  \item The first order approximation $\theta_0$ remains valid as longs as its next order is incomparable to the first. $t_2$ time scale has eliminated the first order secular terms.
+    \item The residual $\varepsilon^5\theta_2$ grows on the next slow timescale. To explain where this next residual growth comes from we need to consider higher order term in the expansion.
+    \item By considering the symmetry of the pendulum equation which has terms 
+    \[
+    \sin(\varepsilon \theta) = \varepsilon\theta - \frac{{\varepsilon^3\theta}^3}{6} + \frac{\varepsilon^5\theta^5}{120} - \dots
+    \]
+    
+ 
+  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Continuing on Temporal Interval of Validity}
+
+\begin{itemize}
+
+    \item $\varepsilon^5$ term is next in line, which introduces a new resonance issues. To fix this, the even slower phase shift at $t_2 = \varepsilon^4 t$ has to be taken into account, which was ignored in our approximation.
+
+    \[
+    \varepsilon \theta_0 \sim \varepsilon^5 \theta_2 \qquad \Longrightarrow \qquad t \sim \varepsilon^{-4}.
+  \]
+  \item The multiple-scale structure then extends the validity, approximation breaks when:
+  \[
+    \boxed{t = O( \varepsilon^{-4})}
+  \]
+  after which the cumulative effect of the uncorrected, higher-order frequency shift catches up and the phase of the first order solution will have drifted by an O(1) amount compare to the true numerical solution, causing the approximation to break down. Still it is an improved approximate solution to the pendulum equation.
+\end{itemize}
+    
+\end{frame}
+
+
+\begin{frame}{Graphs}
+
+\begin{figure}
+    \includegraphics[width=0.4\linewidth]{part_ii)_eps_0.5_T_15.jpeg}
+    \hspace{1cm}
+    \includegraphics[width=0.4\linewidth]{part_ii)_eps_0.5_T_15_diff.jpeg}
+    \caption{$\varepsilon$ = 0.5; Green: approximate solution; Blue: difference to numerical solution}
+\end{figure}
+
+
+
+\begin{itemize}
+
+
+    \item The graph above shows the difference between approximated solution to the exact physical solution via numerical method. This a actually a surprisingly good approximation.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: Small Scale Phase Drift}
+    
+
+\begin{figure}
+    \includegraphics[width=0.9\linewidth]{part2_4.png}
+    
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Graphs: Large Scale Phase Drift}
+    
+
+\begin{figure}
+    \includegraphics[width = 0.8\linewidth]{usethisgraph.jpg}
+    \caption{$\epsilon$ = 0.5; Green: approximate solution; Blue: Numerical solution }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Method Of Multi-Scale on Pendulum}
+\begin{center}
+    \huge{\mathbf{THE END AND THANKS FOR LISTENING!} } 
+\end{center}
+    
+\end{frame}
+
+
+
+
+\begin{frame}{Graphs: Why it works so well}
+
+\begin{itemize}
+
+    \item Our first-order approximation $\varepsilon \theta_1$ punches way above its weight class because:The next phase-drift term ($\varepsilon^4$) is so tiny that even at $t=100$, the phase error hasn't had enough time to build up. The shape-warping term ($\varepsilon^3 \theta_3$) is suppressed by a factor of $1/192$, meaning the true pendulum remains incredibly close to a perfect cosine wave even when swinging at wide angles ($\theta = 0.5 \text{ radians} \approx 28^\circ$)
+
+    \item In asymptotic mathematics, $O(\varepsilon^{-4})$ defines a scale, not an absolute second. The true breakdown happens when the phase error accumulates to an $O(1)$ shift (meaning the waves drift exactly out of phase, peak-to-trough). The actual frequency correction in your solution is $\omega \approx 1 - \frac{\varepsilon^2}{16}$. If we look at the omitted higher-order frequency corrections that we threw away (which would come from the next time scale, $t_2 = \varepsilon^4 t$), the next correction is roughly proportional to $\frac{\varepsilon^4}{3072} t$.  
+    
+    \item Let's plug in our values ($\varepsilon = 0.5$ and $t = 100$):$$\text{Omitted Phase Error} \approx \frac{(0.5)^4}{3072} \times 100 = \frac{0.0625}{3072} \times 100 \approx 0.002 \text{ radians}$$.
+    
+    \end{itemize}
+\end{frame}
+
+
+% ──────────────────────────────────────────────────────────────
+
+
+\end{document}
