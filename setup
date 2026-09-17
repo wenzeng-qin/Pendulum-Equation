@@ -1,0 +1,147 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+
+\geometry{
+    margin=1in
+}
+
+\begin{document}
+
+\section*{Project 6 -- Multiple time scale solutions of models for a pendulum}
+
+This project is concerned with ODEs which describe the swing of a
+pendulum. You will construct an approximate analytic solution of these
+ODEs by using asymptotic/perturbation methods which exploit the presence
+of a small, dimensionless parameter
+\[
+0 < \epsilon < 1.
+\]
+
+\subsection*{Part 1}
+
+Consider the weakly nonlinear Duffing equation
+\begin{equation}
+    y'' + y + \epsilon y^3 = 0,
+    \tag{12}
+\end{equation}
+where
+\[
+    {}' \equiv \frac{d}{dt},
+\]
+with initial data
+\[
+    y(0)=1,
+    \qquad
+    y'(0)=0.
+\]
+
+\begin{enumerate}
+    \item[(i)]
+    Use the regular perturbation series
+    \[
+        y \sim y_0(t) + \epsilon y_1(t)
+    \]
+    to show that
+    \begin{equation}
+        y \sim \cos(t)
+        + \epsilon
+        \left(
+        \alpha\cos(3t)
+        - \alpha\cos(t)
+        - \frac{3}{8}t\sin(t)
+        \right),
+        \tag{13}
+    \end{equation}
+    where $\alpha$ is a constant you should determine.
+
+    State why the expansion from above is not valid at
+    \[
+        t=\mathcal{O}(\epsilon^{-1}).
+    \]
+
+    \item[(ii)]
+    Use the method of multiple-scales to obtain the leading order
+    approximation
+    \begin{equation}
+        y(t)
+        =
+        \cos\left[(1+k\epsilon)t\right]
+        +\mathcal{O}(\epsilon),
+        \tag{14}
+    \end{equation}
+    where $k$ is a constant to be found.
+
+    Discuss why this expansion is better than the one from (13), in
+    terms of its validity at large time.
+
+    Use (14) to determine an approximation for the period of $y$.
+\end{enumerate}
+
+\subsection*{Part 2}
+
+Consider the equation for a pendulum
+\begin{equation}
+    \theta'' + \sin(\theta)=0,
+    \tag{15}
+\end{equation}
+with initial data
+\[
+    \theta(0)=\epsilon,
+    \qquad
+    \theta'(0)=0.
+\]
+
+\begin{enumerate}
+    \item[(i)]
+    When considering finding an approximate solution to this ODE using
+    multiple scale analysis, state why it is appropriate to introduce
+    the new timescale variables and perturbation series
+    \begin{equation}
+        t_0=t,
+        \qquad
+        t_1=\epsilon^2t,
+        \qquad
+        \theta
+        \sim
+        \epsilon\theta_0(t_0,t_1)
+        +\epsilon^n\theta_1(t_0,t_1),
+        \tag{16}
+    \end{equation}
+    where $n>0$ is a constant you should determine.
+
+    \item[(ii)]
+    Show that
+    \begin{equation}
+        \theta_0
+        =
+        A(t_1)\cos(t_0)
+        +
+        B(t_1)\sin(t_0),
+        \qquad
+        A(0)=1,
+        \qquad
+        B(0)=0,
+        \tag{17}
+    \end{equation}
+    where $A$ and $B$ are functions of integration that need not be
+    determined at this stage.
+
+    \item[(iii)]
+    By considering the system governing the evolution of $\theta_1$,
+    show that
+    \begin{equation}
+        A=\cos\left(\frac{t_1}{16}\right),
+        \qquad
+        B=\sin\left(\frac{t_1}{16}\right).
+        \tag{18}
+    \end{equation}
+
+    Hence, determine the temporal interval of validity of the first
+    order term of $\theta$. Determine an approximation for the period
+    of $\theta$.
+\end{enumerate}
+
+\end{document}
